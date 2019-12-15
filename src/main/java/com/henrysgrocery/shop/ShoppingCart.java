@@ -6,14 +6,24 @@ import com.henrysgrocery.shop.product.ProductCatalog;
 import com.henrysgrocery.shop.product.ProductType;
 import org.joda.money.Money;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 
+import static java.time.LocalDate.now;
+import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 import static org.joda.money.CurrencyUnit.GBP;
 
 public class ShoppingCart {
-    private final AppleTenPercentDiscountOffer appleTenPercentDiscountOffer = new AppleTenPercentDiscountOffer();
-    private final BuyTwoSoupsGetBreadHalfPriceOffer buyTwoSoupsGetBreadHalfPriceOffer = new BuyTwoSoupsGetBreadHalfPriceOffer();
-    private final HashMap<ProductType, Integer> items = new HashMap<>();
+    private final HashMap<ProductType, Integer> items;
+    private final AppleTenPercentDiscountOffer appleTenPercentDiscountOffer;
+    private final BuyTwoSoupsGetBreadHalfPriceOffer buyTwoSoupsGetBreadHalfPriceOffer;
+
+    public ShoppingCart() {
+        items = new HashMap<>();
+        appleTenPercentDiscountOffer = new AppleTenPercentDiscountOffer();
+        buyTwoSoupsGetBreadHalfPriceOffer = new BuyTwoSoupsGetBreadHalfPriceOffer(now().minusDays(1),
+                now().plusMonths(1).with(lastDayOfMonth()));
+    }
 
     public void addItem(final ProductType productType, final int count) {
         final Integer itemsCount = items.get(productType);
@@ -31,7 +41,7 @@ public class ShoppingCart {
 
     public Money calculateTotal() {
         final Money appleDiscount = appleTenPercentDiscountOffer.calculateDiscount(items);
-        final Money breadDiscount = buyTwoSoupsGetBreadHalfPriceOffer.calculateDiscount(items);
+        final Money breadDiscount = buyTwoSoupsGetBreadHalfPriceOffer.calculateDiscount(items, LocalDate.now());
 
         return items.entrySet().stream()
                 .map(entry -> ProductCatalog.getProduct(entry.getKey())
