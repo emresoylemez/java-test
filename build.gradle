@@ -1,0 +1,35 @@
+group 'com.grocery'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'application'
+apply plugin: 'idea'
+apply plugin: 'checkstyle'
+
+checkstyle {
+    toolVersion '8.8'
+    configFile = rootProject.file('checkstyle.xml')
+    sourceSets = [project.sourceSets.main]
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+jar {
+    archiveBaseName = 'henrys-grocery'
+    archiveVersion =  '1.0-SNAPSHOT'
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    testCompile(
+            'org.codehaus.groovy:groovy-all:2.5.5',
+            'org.spockframework:spock-core:1.2-groovy-2.5')
+}
+
+mainClassName = 'com.grocery.GroceryApp'
