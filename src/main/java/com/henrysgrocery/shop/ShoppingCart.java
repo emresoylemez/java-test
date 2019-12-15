@@ -2,10 +2,12 @@ package com.henrysgrocery.shop;
 
 import com.henrysgrocery.shop.offer.AppleTenPercentDiscountOffer;
 import com.henrysgrocery.shop.offer.BuyTwoSoupsGetBreadHalfPriceOffer;
+import com.henrysgrocery.shop.offer.Offer;
 import com.henrysgrocery.shop.product.ProductCatalog;
 import com.henrysgrocery.shop.product.ProductType;
 import org.joda.money.Money;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.HashMap;
 
@@ -15,14 +17,16 @@ import static org.joda.money.CurrencyUnit.GBP;
 
 public class ShoppingCart {
     private final HashMap<ProductType, Integer> items;
-    private final AppleTenPercentDiscountOffer appleTenPercentDiscountOffer;
-    private final BuyTwoSoupsGetBreadHalfPriceOffer buyTwoSoupsGetBreadHalfPriceOffer;
+    private final Offer appleTenPercentDiscountOffer;
+    private final Offer buyTwoSoupsGetBreadHalfPriceOffer;
 
-    public ShoppingCart() {
+    public ShoppingCart(final Clock clock) {
+        final LocalDate now = now(clock);
         items = new HashMap<>();
-        appleTenPercentDiscountOffer = new AppleTenPercentDiscountOffer();
-        buyTwoSoupsGetBreadHalfPriceOffer = new BuyTwoSoupsGetBreadHalfPriceOffer(now().minusDays(1),
-                now().plusMonths(1).with(lastDayOfMonth()));
+        buyTwoSoupsGetBreadHalfPriceOffer = new BuyTwoSoupsGetBreadHalfPriceOffer(now.minusDays(1),
+                now.plusDays(7));
+        appleTenPercentDiscountOffer = new AppleTenPercentDiscountOffer(now.plusDays(3),
+                now.plusMonths(1).with(lastDayOfMonth()));
     }
 
     public void addItem(final ProductType productType, final int count) {
@@ -39,9 +43,9 @@ public class ShoppingCart {
         return items;
     }
 
-    public Money calculateTotal() {
-        final Money appleDiscount = appleTenPercentDiscountOffer.calculateDiscount(items);
-        final Money breadDiscount = buyTwoSoupsGetBreadHalfPriceOffer.calculateDiscount(items, LocalDate.now());
+    public Money calculateTotal(final LocalDate purchaseDate) {
+        final Money appleDiscount = appleTenPercentDiscountOffer.calculateDiscount(items, purchaseDate);
+        final Money breadDiscount = buyTwoSoupsGetBreadHalfPriceOffer.calculateDiscount(items, purchaseDate);
 
         return items.entrySet().stream()
                 .map(entry -> ProductCatalog.getProduct(entry.getKey())

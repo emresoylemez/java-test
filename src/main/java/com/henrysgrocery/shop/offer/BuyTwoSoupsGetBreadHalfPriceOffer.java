@@ -13,16 +13,13 @@ import static com.henrysgrocery.shop.product.ProductType.bread;
 import static com.henrysgrocery.shop.product.ProductType.soup;
 import static org.joda.money.CurrencyUnit.GBP;
 
-public class BuyTwoSoupsGetBreadHalfPriceOffer {
-    private final LocalDate validFrom;
-    private final LocalDate validTo;
+public class BuyTwoSoupsGetBreadHalfPriceOffer extends Offer {
 
     public BuyTwoSoupsGetBreadHalfPriceOffer(final LocalDate validFrom, final LocalDate validTo) {
-        this.validFrom = validFrom;
-        this.validTo = validTo;
+        super(validFrom, validTo);
     }
 
-
+    @Override
     public Money calculateDiscount(final HashMap<ProductType, Integer> items, final LocalDate purchaseDate) {
         if (isOfferInValid(purchaseDate)) {
             return Money.zero(GBP);
@@ -41,10 +38,4 @@ public class BuyTwoSoupsGetBreadHalfPriceOffer {
                 .dividedBy(2, RoundingMode.HALF_DOWN)
                 .multipliedBy(applicableDiscount);
     }
-
-    private boolean isOfferInValid(final LocalDate purchaseDate) {
-        return purchaseDate.isBefore(validFrom) || purchaseDate.isAfter(validTo);
-    }
-
-
 }
