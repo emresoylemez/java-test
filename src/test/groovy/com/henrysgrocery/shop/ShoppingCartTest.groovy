@@ -12,9 +12,11 @@ class ShoppingCartTest extends Specification {
         when:
         shoppingCart.addItem("soup", 2)
         shoppingCart.addItem("bread", 2)
+        def totalItems = shoppingCart.getItems().values().stream()
+                .reduce(0, { subtotal, element -> subtotal + element })
 
         then:
-        shoppingCart.getItems().size() == 4
+        totalItems == 4
     }
 
     def "calculateTotal - when there is no item should calculate to zero"() {
@@ -25,7 +27,7 @@ class ShoppingCartTest extends Specification {
         total == Money.zero(GBP)
     }
 
-    def "calculateTotal - when there is item should calculate to sum"() {
+    def "calculateTotal - when there is item in the cart should calculate sum correctly"() {
         given:
         shoppingCart.addItem("soup", 2)
         shoppingCart.addItem("bread", 2)
