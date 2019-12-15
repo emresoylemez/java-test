@@ -27,6 +27,8 @@ repositories {
 
 
 dependencies {
+    compileOnly('org.projectlombok:lombok:1.18.6')
+    annotationProcessor('org.projectlombok:lombok:1.18.6')
     compile ('org.joda:joda-money:1.0.1')
     testCompile(
             'org.codehaus.groovy:groovy-all:2.5.5',
