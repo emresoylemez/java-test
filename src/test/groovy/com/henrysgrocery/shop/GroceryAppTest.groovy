@@ -1,23 +1,33 @@
 package com.henrysgrocery.shop
 
-
 import spock.lang.Specification
 
 class GroceryAppTest extends Specification {
-    ByteArrayOutputStream outContent = new ByteArrayOutputStream()
+    def outContent = new ByteArrayOutputStream()
+    def shoppingCart = Mock(ShoppingCart)
 
     void setup() {
         System.setOut(new PrintStream(outContent))
     }
 
-    def "addItem - should show the menu"() {
+    def "showInfo - should show the Info"() {
         given:
-        def app = new GroceryApp()
+        def app = new GroceryApp(shoppingCart, new Scanner(System.in))
 
         when:
-        app.showMenu("testText")
+        app.showInfo("testText")
 
         then:
         outContent.toString() == "testText"
     }
+
+    def "showMenu - should exit from console when 'exit' entered"() {
+        when:
+        def app = new GroceryApp(shoppingCart, new Scanner("exit\n"))
+        app.showMenu()
+
+        then:
+        outContent.toString() == "exited"
+    }
+
 }
