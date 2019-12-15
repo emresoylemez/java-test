@@ -1,7 +1,10 @@
 package com.henrysgrocery.shop;
 
 import com.henrysgrocery.shop.product.ProductType;
+import org.joda.money.Money;
+
 import java.time.Clock;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 import static java.lang.System.out;
@@ -35,9 +38,15 @@ public class GroceryApp {
         out.print("exited");
     }
 
+    public void showTotal() {
+        final Money totalCost = shoppingCart.calculateTotal(LocalDate.now(Clock.systemDefaultZone()));
+        out.print("Total cost: " + totalCost.getAmount() + " " + totalCost.getCurrencyUnit());
+    }
+
     public static void main(final String[] args) {
         final GroceryApp app = new GroceryApp(new ShoppingCart(Clock.systemDefaultZone()), new Scanner(System.in));
         app.showInfo(MENU);
         app.showMenu();
+        app.showTotal();
     }
 }
