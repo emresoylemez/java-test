@@ -8,14 +8,6 @@ import static org.joda.money.CurrencyUnit.GBP
 class ShoppingCartTest extends Specification {
     ShoppingCart shoppingCart = new ShoppingCart()
 
-    def "addItem - item should be added"() {
-        when:
-        shoppingCart.addItem("soup", 1)
-
-        then:
-        shoppingCart.getItems().size() == 1
-    }
-
     def "addItem - multiple item should be added"() {
         when:
         shoppingCart.addItem("soup", 2)
@@ -44,7 +36,18 @@ class ShoppingCartTest extends Specification {
         def total = shoppingCart.calculateTotal()
 
         then:
-        total == Money.of(GBP, 5.7d)
+        total == Money.of(GBP, 5.68d)
+    }
+
+    def "calculateTotal - should apply 'Apple 10% Discount' offer"() {
+        given:
+        shoppingCart.addItem("apple", 10)
+
+        when:
+        def total = shoppingCart.calculateTotal()
+
+        then:
+        total == Money.of(GBP, 0.9d)
     }
 
 }
