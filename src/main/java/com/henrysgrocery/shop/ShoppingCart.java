@@ -1,7 +1,11 @@
 package com.henrysgrocery.shop;
 
+import org.joda.money.Money;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.joda.money.CurrencyUnit.GBP;
 
 public class ShoppingCart {
 
@@ -15,5 +19,11 @@ public class ShoppingCart {
 
     public List<String> getItems() {
         return items;
+    }
+
+    public Money calculateTotal() {
+        return items.stream()
+                .map(item -> ProductsPrice.valueOf(item).getPrice())
+                .reduce(Money.zero(GBP), Money::plus);
     }
 }
