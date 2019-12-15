@@ -1,6 +1,7 @@
 package com.henrysgrocery.shop;
 
-import com.henrysgrocery.shop.offer.AppleDiscountOffer;
+import com.henrysgrocery.shop.offer.AppleTenPercentDiscountOffer;
+import com.henrysgrocery.shop.offer.BuyTwoSoupsGetBreadHalfPriceOffer;
 import org.joda.money.Money;
 
 import java.util.HashMap;
@@ -8,7 +9,8 @@ import java.util.HashMap;
 import static org.joda.money.CurrencyUnit.GBP;
 
 public class ShoppingCart {
-    private final AppleDiscountOffer appleDiscountOffer = new AppleDiscountOffer();
+    private final AppleTenPercentDiscountOffer appleTenPercentDiscountOffer = new AppleTenPercentDiscountOffer();
+    private final BuyTwoSoupsGetBreadHalfPriceOffer buyTwoSoupsGetBreadHalfPriceOffer = new BuyTwoSoupsGetBreadHalfPriceOffer();
     private final HashMap<String, Integer> items = new HashMap<>();
 
     public void addItem(final String name, final int count) {
@@ -25,15 +27,16 @@ public class ShoppingCart {
     }
 
     public Money calculateTotal() {
-        final Money discount = appleDiscountOffer.calculateDiscount(items);
+        final Money appleDiscount = appleTenPercentDiscountOffer.calculateDiscount(items);
+        final Money breadDiscount = buyTwoSoupsGetBreadHalfPriceOffer.calculateDiscount(items);
 
         return items.entrySet().stream()
                 .map(entry -> ProductsPrice.valueOf(entry.getKey())
                         .getPrice()
                         .multipliedBy(entry.getValue())
                 )
-                .reduce(Money.zero(GBP), Money::plus).minus(discount);
+                .reduce(Money.zero(GBP), Money::plus)
+                .minus(appleDiscount)
+                .minus(breadDiscount);
     }
-
-
 }

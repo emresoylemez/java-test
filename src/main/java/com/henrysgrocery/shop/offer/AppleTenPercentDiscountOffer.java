@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 import static org.joda.money.CurrencyUnit.GBP;
 
-public class AppleDiscountOffer {
+public class AppleTenPercentDiscountOffer {
     public Money calculateDiscount(final HashMap<String, Integer> items) {
         return items.entrySet().stream()
                 .filter(entry -> entry.getKey().equals("apple"))

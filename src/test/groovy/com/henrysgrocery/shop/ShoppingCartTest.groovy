@@ -38,7 +38,7 @@ class ShoppingCartTest extends Specification {
         def total = shoppingCart.calculateTotal()
 
         then:
-        total == Money.of(GBP, 5.68d)
+        total == Money.of(GBP, 5.28d)
     }
 
     def "calculateTotal - should apply 'Apple 10% Discount' offer"() {
@@ -50,6 +50,18 @@ class ShoppingCartTest extends Specification {
 
         then:
         total == Money.of(GBP, 0.9d)
+    }
+
+    def "calculateTotal - should apply 'Buy 2 tins of soup and get a loaf of bread half price' offer"() {
+        given:
+        shoppingCart.addItem("soup", 2)
+        shoppingCart.addItem("bread", 2)
+
+        when:
+        def total = shoppingCart.calculateTotal()
+
+        then:
+        total == Money.of(GBP, 2.5d)
     }
 
 }
