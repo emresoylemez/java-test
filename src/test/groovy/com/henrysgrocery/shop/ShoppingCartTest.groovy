@@ -1,23 +1,23 @@
 package com.henrysgrocery.shop
 
+import com.henrysgrocery.shop.offer.AppleTenPercentDiscountOffer
+import com.henrysgrocery.shop.offer.BuyTwoSoupsGetBreadHalfPriceOffer
 import org.joda.money.Money
 import spock.lang.Specification
 
-import java.time.Clock
 import java.time.LocalDate
-import java.time.ZoneId
-import java.time.ZoneOffset
 
 import static com.henrysgrocery.shop.product.ProductType.*
 import static org.joda.money.CurrencyUnit.GBP
 
 class ShoppingCartTest extends Specification {
 
-    def testDate = LocalDate.of(2019, 6, 1)
-    def testClock = Clock.fixed(testDate.atStartOfDay().toInstant(ZoneOffset.UTC), ZoneId.systemDefault())
-    def shoppingCart = new ShoppingCart(testClock)
+    def static testDate = LocalDate.of(2019, 6, 1)
 
     def "addItem - multiple item should be added"() {
+        given:
+        def shoppingCart = new ShoppingCart(Collections.emptyList())
+
         when:
         shoppingCart.addItem(soup, 2)
         shoppingCart.addItem(bread, 2)
@@ -29,6 +29,9 @@ class ShoppingCartTest extends Specification {
     }
 
     def "calculateTotal - when there is no item should calculate to zero"() {
+        given:
+        def shoppingCart = new ShoppingCart(Collections.emptyList())
+
         when:
         def total = shoppingCart.calculateTotal(testDate)
 
@@ -36,26 +39,30 @@ class ShoppingCartTest extends Specification {
         total == Money.zero(GBP)
     }
 
-    def "calculateTotal - when there is item in the cart should calculate sum and correctly"() {
+    def "calculateTotal - when there is item in the cart and no offer should calculate sum correctly"() {
         given:
+        def shoppingCart = new ShoppingCart(Collections.emptyList())
+
         shoppingCart.addItem(soup, 2)
         shoppingCart.addItem(bread, 2)
         shoppingCart.addItem(milk, 2)
         shoppingCart.addItem(apple, 2)
 
         when:
-        def total = shoppingCart.calculateTotal(testDate.plusDays(3))
+        def total = shoppingCart.calculateTotal(testDate)
 
         then:
-        total == Money.of(GBP, 5.28)
+        total == Money.of(GBP, 5.70)
     }
+
 
     def "calculateTotal - should apply 'Apple 10% Discount' offer"() {
         given:
+        def shoppingCart = new ShoppingCart([new AppleTenPercentDiscountOffer(testDate, testDate)])
         shoppingCart.addItem(apple, 10)
 
         when:
-        def total = shoppingCart.calculateTotal(testDate.plusDays(3))
+        def total = shoppingCart.calculateTotal(testDate)
 
         then:
         total == Money.of(GBP, 0.9)
@@ -63,6 +70,7 @@ class ShoppingCartTest extends Specification {
 
     def "calculateTotal - should apply 'Buy 2 tins of soup and get a loaf of bread half price' offer"() {
         given:
+        def shoppingCart = new ShoppingCart([new BuyTwoSoupsGetBreadHalfPriceOffer(testDate, testDate)])
         shoppingCart.addItem(soup, 2)
         shoppingCart.addItem(bread, 2)
 

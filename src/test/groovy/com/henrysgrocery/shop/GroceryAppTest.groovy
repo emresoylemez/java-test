@@ -5,6 +5,7 @@ import org.joda.money.Money
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import static com.henrysgrocery.shop.GroceryApp.MENU
 import static org.joda.money.CurrencyUnit.GBP
 
 class GroceryAppTest extends Specification {
@@ -20,10 +21,10 @@ class GroceryAppTest extends Specification {
         def app = new GroceryApp(shoppingCart, new Scanner(System.in))
 
         when:
-        app.showInfo("testText")
+        app.showInfo()
 
         then:
-        outContent.toString() == "testText"
+        outContent.toString() == MENU
     }
 
     def "showMenu - should exit from console when 'exit' entered"() {

@@ -1,32 +1,23 @@
 package com.henrysgrocery.shop;
 
-import com.henrysgrocery.shop.offer.AppleTenPercentDiscountOffer;
-import com.henrysgrocery.shop.offer.BuyTwoSoupsGetBreadHalfPriceOffer;
 import com.henrysgrocery.shop.offer.Offer;
 import com.henrysgrocery.shop.product.ProductCatalog;
 import com.henrysgrocery.shop.product.ProductType;
 import org.joda.money.Money;
 
-import java.time.Clock;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 
-import static java.time.LocalDate.now;
-import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 import static org.joda.money.CurrencyUnit.GBP;
 
 public class ShoppingCart {
     private final HashMap<ProductType, Integer> items;
-    private final Offer appleTenPercentDiscountOffer;
-    private final Offer buyTwoSoupsGetBreadHalfPriceOffer;
+    private final List<Offer> offers;
 
-    public ShoppingCart(final Clock clock) {
-        final LocalDate now = now(clock);
+    public ShoppingCart(final List<Offer> offers) {
         items = new HashMap<>();
-        buyTwoSoupsGetBreadHalfPriceOffer = new BuyTwoSoupsGetBreadHalfPriceOffer(now.minusDays(1),
-                now.plusDays(7));
-        appleTenPercentDiscountOffer = new AppleTenPercentDiscountOffer(now.plusDays(3),
-                now.plusMonths(1).with(lastDayOfMonth()));
+        this.offers = offers;
     }
 
     public void addItem(final ProductType productType, final int count) {
@@ -44,8 +35,10 @@ public class ShoppingCart {
     }
 
     public Money calculateTotal(final LocalDate purchaseDate) {
-        final Money appleDiscount = appleTenPercentDiscountOffer.calculateDiscount(items, purchaseDate);
-        final Money breadDiscount = buyTwoSoupsGetBreadHalfPriceOffer.calculateDiscount(items, purchaseDate);
+
+        final Money discountTotal = offers.stream()
+                .map(x -> x.calculateDiscount(items, purchaseDate))
+                .reduce(Money.zero(GBP), Money::plus);
 
         return items.entrySet().stream()
                 .map(entry -> ProductCatalog.getProduct(entry.getKey())
@@ -53,7 +46,6 @@ public class ShoppingCart {
                         .multipliedBy(entry.getValue())
                 )
                 .reduce(Money.zero(GBP), Money::plus)
-                .minus(appleDiscount)
-                .minus(breadDiscount);
+                .minus(discountTotal);
     }
 }
