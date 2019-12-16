@@ -17,8 +17,14 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 jar {
+    manifest {
+        attributes 'Main-Class' : 'com.henrysgrocery.shop.GroceryApp'
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
     archiveBaseName = 'henrys-grocery'
-    archiveVersion =  '1.0-SNAPSHOT'
+    archiveVersion = '1.0-SNAPSHOT'
 }
 
 repositories {
@@ -27,8 +33,6 @@ repositories {
 
 
 dependencies {
-    compileOnly('org.projectlombok:lombok:1.18.6')
-    annotationProcessor('org.projectlombok:lombok:1.18.6')
     compile ('org.joda:joda-money:1.0.1')
     testCompile(
             'org.codehaus.groovy:groovy-all:2.5.5',
