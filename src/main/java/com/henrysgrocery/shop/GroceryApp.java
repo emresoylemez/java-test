@@ -15,6 +15,7 @@ import static java.lang.System.out;
 public class GroceryApp {
 
     public static final String MENU = "To add an item, write the name of the product. \nAvailable products: soup bread milk apple \nTo Exit : exit\n";
+    public static final String NOT_FOUND_MESSAGE = " not found in the product list, please try again";
     private final ShoppingCart shoppingCart;
     private final Scanner scanner;
 
@@ -42,9 +43,13 @@ public class GroceryApp {
             if (input.equals("exit")) {
                 break;
             }
-
-            shoppingCart.addItem(ProductType.valueOf(input), 1);
-            out.println(input + " added");
+            try {
+                final ProductType productType = ProductType.valueOf(input);
+                shoppingCart.addItem(productType, 1);
+                out.println(input + " added");
+            } catch (IllegalArgumentException e) {
+                out.println(input + NOT_FOUND_MESSAGE);
+            }
         }
         out.println("exited");
     }

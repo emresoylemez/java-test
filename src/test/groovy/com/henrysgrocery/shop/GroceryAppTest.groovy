@@ -6,6 +6,7 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 import static com.henrysgrocery.shop.GroceryApp.MENU
+import static com.henrysgrocery.shop.GroceryApp.NOT_FOUND_MESSAGE
 import static org.joda.money.CurrencyUnit.GBP
 
 class GroceryAppTest extends Specification {
@@ -34,6 +35,16 @@ class GroceryAppTest extends Specification {
 
         then:
         outContent.toString() == "exited\n"
+    }
+
+    def "showMenu - should inform when wrong product name entered"() {
+        when:
+        def productName = "wrongProductName"
+        def app = new GroceryApp(shoppingCart, new Scanner("${productName}\nexit\n"))
+        app.showMenu()
+
+        then:
+        outContent.toString() == "${productName}${NOT_FOUND_MESSAGE}\nexited\n"
     }
 
     @Unroll
