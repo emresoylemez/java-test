@@ -14,7 +14,7 @@ import static java.lang.System.out;
 
 public class GroceryApp {
 
-    public static final String MENU = "To add an item, write the name of the product. \nAvailable products: soup  bread  bread  milk \nTo Exit : exit\n";
+    public static final String MENU = "To add an item, write the name of the product. \nAvailable products: soup bread milk apple \nTo Exit : exit\n";
     private final ShoppingCart shoppingCart;
     private final Scanner scanner;
 
@@ -46,11 +46,11 @@ public class GroceryApp {
             shoppingCart.addItem(ProductType.valueOf(input), 1);
             out.println(input + " added");
         }
-        out.print("exited");
+        out.println("exited");
     }
 
     public void showTotal() {
         final Money totalCost = shoppingCart.calculateTotal(LocalDate.now(Clock.systemDefaultZone()));
-        out.print("Total cost: " + totalCost.getAmount() + " " + totalCost.getCurrencyUnit());
+        out.println("Total cost: " + totalCost.getAmount() + " " + totalCost.getCurrencyUnit());
     }
 }

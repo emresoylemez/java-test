@@ -33,7 +33,7 @@ class GroceryAppTest extends Specification {
         app.showMenu()
 
         then:
-        outContent.toString() == "exited"
+        outContent.toString() == "exited\n"
     }
 
     @Unroll
@@ -46,7 +46,7 @@ class GroceryAppTest extends Specification {
         app.showMenu()
 
         expect:
-        outContent.toString() == "${item} added\nexited"
+        outContent.toString() == "${item} added\nexited\n"
 
         where:
         item << ["soup", "bread", "milk", "apple"]
@@ -62,7 +62,7 @@ class GroceryAppTest extends Specification {
         app.showTotal()
 
         then:
-        outContent.toString() == "Total cost: 12.34 GBP"
+        outContent.toString() == "Total cost: 12.34 GBP\n"
     }
 
 }
