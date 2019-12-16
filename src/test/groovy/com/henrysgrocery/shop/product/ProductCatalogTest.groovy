@@ -18,10 +18,10 @@ class ProductCatalogTest extends Specification {
         }
 
         where:
-        type   | expectedUnit | expectedCost
-        soup   | "tin"        | 0.65
-        bread  | "loaf"       | 0.80
-        milk   | "bottle"     | 1.30
+        type  | expectedUnit | expectedCost
+        soup  | "tin"        | 0.65
+        bread | "loaf"       | 0.80
+        milk  | "bottle"     | 1.30
         apple | "single"     | 0.10
     }
 }

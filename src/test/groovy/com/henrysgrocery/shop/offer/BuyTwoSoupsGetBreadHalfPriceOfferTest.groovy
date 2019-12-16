@@ -1,6 +1,6 @@
 package com.henrysgrocery.shop.offer
 
-import com.henrysgrocery.shop.product.ProductType
+
 import org.joda.money.Money
 import spock.lang.Specification
 

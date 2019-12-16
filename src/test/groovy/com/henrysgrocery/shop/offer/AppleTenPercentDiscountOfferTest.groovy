@@ -1,14 +1,13 @@
 package com.henrysgrocery.shop.offer
 
 
-import org.joda.money.CurrencyUnit
 import org.joda.money.Money
 import spock.lang.Specification
 
 import java.time.LocalDate
 
 import static com.henrysgrocery.shop.product.ProductType.*
-import static org.joda.money.CurrencyUnit.*
+import static org.joda.money.CurrencyUnit.GBP
 
 class AppleTenPercentDiscountOfferTest extends Specification {
 
