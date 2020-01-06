@@ -15,10 +15,10 @@ public abstract class Offer {
         this.validTo = validTo;
     }
 
-    public abstract Money calculateDiscount(final HashMap<ProductType, Integer> items, final LocalDate purchaseDate);
+    public abstract Money calculateDiscount(final HashMap<ProductType, Integer> items);
 
-    protected boolean isOfferInValid(final LocalDate purchaseDate) {
-        return purchaseDate.isBefore(validFrom) || purchaseDate.isAfter(validTo);
+    public boolean isOfferValid(final LocalDate purchaseDate) {
+        return !purchaseDate.isBefore(validFrom) && !purchaseDate.isAfter(validTo);
     }
 
 }

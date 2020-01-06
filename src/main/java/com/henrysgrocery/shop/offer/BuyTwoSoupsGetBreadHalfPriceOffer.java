@@ -20,10 +20,7 @@ public class BuyTwoSoupsGetBreadHalfPriceOffer extends Offer {
     }
 
     @Override
-    public Money calculateDiscount(final HashMap<ProductType, Integer> items, final LocalDate purchaseDate) {
-        if (isOfferInValid(purchaseDate)) {
-            return Money.zero(GBP);
-        }
+    public Money calculateDiscount(final HashMap<ProductType, Integer> items) {
 
         final Integer soupCount = Optional.ofNullable(items.get(soup)).orElse(0);
         if (soupCount < 2) {

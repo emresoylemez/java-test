@@ -37,7 +37,8 @@ public class ShoppingCart {
     public Money calculateTotal(final LocalDate purchaseDate) {
 
         final Money discountTotal = offers.stream()
-                .map(x -> x.calculateDiscount(items, purchaseDate))
+                .filter(x -> x.isOfferValid(purchaseDate))
+                .map(x -> x.calculateDiscount(items))
                 .reduce(Money.zero(GBP), Money::plus);
 
         return items.entrySet().stream()

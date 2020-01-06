@@ -18,10 +18,7 @@ public class AppleTenPercentDiscountOffer extends Offer {
     }
 
     @Override
-    public Money calculateDiscount(final HashMap<ProductType, Integer> items, final LocalDate purchaseDate) {
-        if (isOfferInValid(purchaseDate)) {
-            return Money.zero(GBP);
-        }
+    public Money calculateDiscount(final HashMap<ProductType, Integer> items) {
 
         return items.entrySet().stream()
                 .filter(entry -> entry.getKey().equals(apple))
